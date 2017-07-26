@@ -78,13 +78,20 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/userinfo",method=RequestMethod.GET)
-	public UserInfo userinfo(){
-		return new UserInfo("male","abc");
+	public UserInfo getUserinfo(@RequestParam int id){
+		return userService.getUserInfo(id);
 	}
 	
 	@RequestMapping(value="/userinfo",method=RequestMethod.POST)
-	public ResponseEntity<?> userinfo(UserInfo info){
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<?> setUserinfo(UserInfo info){
+		boolean b=userService.setUserInfo(info);
+		if(b){
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	
