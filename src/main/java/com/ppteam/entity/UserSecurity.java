@@ -5,11 +5,12 @@ import java.util.*;
 public class UserSecurity {
 	private Integer id;
 	private String password;
-	private Map<String,String> questionsAndAnswers=new HashMap<String,String>();
+	private List<QuestionAndAnswer> questionsAndAnswers=
+			new ArrayList<QuestionAndAnswer>();
 	
 	public UserSecurity() {}
 
-	public UserSecurity(Integer id, String password, Map<String, String> questionsAndAnswers) {
+	public UserSecurity(Integer id, String password, List<QuestionAndAnswer> questionsAndAnswers) {
 		super();
 		this.id = id;
 		this.password = password;
@@ -32,11 +33,11 @@ public class UserSecurity {
 		this.password = password;
 	}
 
-	public Map<String, String> getQuestionsAndAnswers() {
+	public List<QuestionAndAnswer> getQuestionsAndAnswers() {
 		return questionsAndAnswers;
 	}
 
-	public void setQuestionsAndAnswers(Map<String, String> questionsAndAnswers) {
+	public void setQuestionsAndAnswers(List<QuestionAndAnswer> questionsAndAnswers) {
 		this.questionsAndAnswers = questionsAndAnswers;
 	}
 	

@@ -25,38 +25,49 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public User get(int id) {
-		List<User> u=jdbcTemplate.query("select * from user where id=?",new Object[]{id},
+		String sql="select * from user where id=?";
+		Object[] queryObjects={id};
+		
+		List<User> u=jdbcTemplate.query(sql,queryObjects,
 			new RowMapper<User>() {
 				@Override
-				public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-					User u=new User(
-							rs.getInt("id"),
-							rs.getString("username"),
-							rs.getLong("register_time"),
-							Role.stringToEnum(rs.getString("role")));
+				public User mapRow(ResultSet rs, int rowNum) 
+						throws SQLException {
+					User u=new User();
+					u.setId(rs.getInt("id"));
+					u.setUsername(rs.getString("username"));
+					u.setRegisterTime(rs.getLong("register_time"));
+					u.setRole(Role.fromString(rs.getString("role")));
 					return u;
 				}
 			});
-		if(u.size()==0) return null;
-		return u.get(0);
+		//通常查询得到一个或没有结果
+		if(u.size()!=1) 
+			return null;
+		else 
+			return u.get(0);
 	}
 
 	@Override
 	public Integer add(User u) {
-		Object[] params={u.getUsername(),u.getRegisterTime()
-				,Role.enumToString(u.getRole())};
-		jdbcTemplate.update("insert into user values(null,?,?,?)"
-				,params);
-		List<Integer> l=jdbcTemplate.query("select last_insert_id()"
+		String sql="insert into user values(null,?,?,?)";
+		Object[] queryObjects={u.getUsername(),u.getRegisterTime()
+				,u.getRole().toString()};
+		
+		jdbcTemplate.update(sql,queryObjects);
+		
+		//获取自增id
+		List<Integer> l=jdbcTemplate.query(
+				"select last_insert_id()"
 				,new RowMapper<Integer>(){
 
 					@Override
-					public Integer mapRow(ResultSet rs, int arg1) throws SQLException {
-						// TODO Auto-generated method stub
+					public Integer mapRow(ResultSet rs, int arg1) 
+							throws SQLException {
 						return rs.getInt("last_insert_id()");
 					}
-					
-				});
+				}
+		);
 		if(l.size()!=1)
 			return null;
 		else
@@ -68,37 +79,44 @@ public class UserDaoImpl implements UserDao {
 		String sql="update user set "+
 				"username=?,register_time=?,role=? "+
 				"where id=?";
-		Object params=new Object[]{
+		Object queryObjects=new Object[]{
 				u.getUsername(),
 				u.getRegisterTime(),
 				u.getRole(),
 				u.getId()};
-		jdbcTemplate.update(sql,params);
+		jdbcTemplate.update(sql,queryObjects);
+		
 		return true;
 	}
 
 	@Override
 	public boolean delete(int id) {
-		// TODO Auto-generated method stub
+		String sql="delete from user where id=?";
+		jdbcTemplate.update(sql,new Object[]{id});
+		
 		return false;
 	}
 
 	@Override
 	public User getByUsername(String username) {
-		List<User> u=jdbcTemplate.query("select * from user where username=?",new Object[]{username},
+		String sql="select * from user where username=?";
+		List<User> u=jdbcTemplate.query(sql,new Object[]{username},
 				new RowMapper<User>() {
 					@Override
 					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-						User u=new User(
-								rs.getInt("id"),
-								rs.getString("username"),
-								rs.getLong("register_time"),
-								Role.stringToEnum(rs.getString("role")));
+						User u=new User();
+						u.setId(rs.getInt("id"));
+						u.setUsername(rs.getString("username"));
+						u.setRegisterTime(rs.getLong("register_time"));
+						u.setRole(Role.fromString(rs.getString("role")));
 						return u;
 					}
-				});
-			if(u.size()!=1) return null;
-			return u.get(0);
+				}
+		);
+		if(u.size()!=1) 
+			return null;
+		return 
+			u.get(0);
 	}
 
 	

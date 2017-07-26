@@ -6,5 +6,7 @@ public interface UserService {
 	
 	public boolean register(RegisterInfo info);
 	public boolean usernameAvailable(String username);
+	public UserInfo getUserInfo(int id);
+	public boolean setUserInfo(UserInfo ui);
 
 }

@@ -1,25 +1,33 @@
 package com.ppteam.entity;
 
 public enum Gender {
-	MALE, FEMALE,UNKNOWN;
+	MALE("male"),
+	FEMALE("female"),
+	OTHER("other"),
+	UNKNOWN("unknown");
 	
-	public static String enumToString(Gender g){
-		switch(g){
-		case MALE:return "male";
-		case FEMALE:return "female";
-		default:return "unknown";
-		}
+	private String value;
+	
+	private Gender(String value){
+		this.value=value;
 	}
 	
-	public static Gender stringToEnum(String s){
+	public String toString(){
+		return this.value;
+	}
+	
+	public static Gender fromString(String s){
 		if(s.equals("male")){
-			return Gender.MALE;
+			return MALE;
 		}
 		else if(s.equals("female")){
-			return Gender.FEMALE;
+			return FEMALE;
+		}
+		else if(s.endsWith("other")){
+			return OTHER;
 		}
 		else{
-			return Gender.UNKNOWN;
+			return UNKNOWN;
 		}
 	}
 }

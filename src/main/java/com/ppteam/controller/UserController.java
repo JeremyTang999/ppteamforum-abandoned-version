@@ -33,8 +33,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private UserDao userDao;
+	/*@Autowired
+	private UserDao userDao;*/
 
 	@RequestMapping(value="/registerinfo",method=RequestMethod.POST)
 	public ResponseEntity<?> register(@RequestBody RegisterInfo info){
@@ -42,26 +42,32 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/username",method=RequestMethod.POST)
-	public String username(@RequestBody Username username){
-		if(userService.usernameAvailable(username.getUsername()))
+	@RequestMapping(value="/username_available",method=RequestMethod.POST)
+	public String username(@RequestParam("username") String username){
+		boolean t=userService.usernameAvailable(username);
+		if(t){
 			return "available";
-		else
+		}
+		else{
 			return "unavailable";
+		}
 	}
 	
-	@RequestMapping(value="/username",method=RequestMethod.GET)
+	@RequestMapping(value="/username_role",method=RequestMethod.GET)
 	public ResponseEntity<?> username(){
-		//return new ResponseEntity<String>("username", HttpStatus.OK);
+		
 		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
 		if(auth instanceof AnonymousAuthenticationToken){
+			//未登录即匿名则返回403
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 		else{
 			Collection<?> c=auth.getAuthorities();
+			//每人仅一种角色，获取c中第一项
 			if(c.size()==1){
 				String role=((GrantedAuthority)(c.iterator().next())).getAuthority();
-				return new ResponseEntity<>(new UsernameAndRole(auth.getName(),role),HttpStatus.OK);
+				UsernameAndRole ur=new UsernameAndRole(auth.getName(),role);
+				return new ResponseEntity<>(ur,HttpStatus.OK);
 			}
 			else{
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

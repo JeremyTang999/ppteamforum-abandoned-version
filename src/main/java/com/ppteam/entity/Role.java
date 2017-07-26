@@ -1,22 +1,23 @@
 package com.ppteam.entity;
 
 public enum Role {
-	USER, ADMIN, IN_AUDIT;
-	public static String enumToString(Role r){
-		switch(r){
-		case USER:return "user";
-		case ADMIN:return "admin";
-		case IN_AUDIT:return "in_audit";
-		default: return "";
-		}
+	USER("user"), ADMIN("admin"), IN_AUDIT("in_audit");
+	
+	private String value;
+	
+	private Role(String value){
+		this.value=value;
+	}
+	public String toString(){
+		return this.value;
 	}
 	
-	public static Role stringToEnum(String s){
+	public static Role fromString(String s){
 		if(s.equals("user"))
-			return Role.USER;
+			return USER;
 		else if(s.equals("admin"))
-			return Role.ADMIN;
+			return ADMIN;
 		else
-			return Role.IN_AUDIT;
+			return IN_AUDIT;
 	}
 }

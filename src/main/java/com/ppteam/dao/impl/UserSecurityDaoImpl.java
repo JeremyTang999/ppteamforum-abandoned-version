@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ppteam.dao.UserSecurityDao;
 import com.ppteam.entity.Gender;
+import com.ppteam.entity.QuestionAndAnswer;
 import com.ppteam.entity.Role;
 import com.ppteam.entity.User;
 import com.ppteam.entity.UserSecurity;
@@ -23,79 +24,86 @@ public class UserSecurityDaoImpl implements UserSecurityDao {
 
 	@Override
 	public UserSecurity get(int id) {
-		List<UserSecurity> u=jdbcTemplate.query("select * from user_security where id=?",new Object[]{id},
-				new RowMapper<UserSecurity>() {
-					@Override
-					public UserSecurity mapRow(ResultSet rs, int rowNum) throws SQLException {
-						UserSecurity u=new UserSecurity();
-						u.setId(rs.getInt("id"));
-						u.setPassword(rs.getString("password"));
-						Map<String,String> m=new HashMap<String,String>();
-						m.put(rs.getString("question1"),rs.getString("answer1"));
-						m.put(rs.getString("question2"),rs.getString("answer2"));
-						m.put(rs.getString("question3"),rs.getString("answer3"));
-						u.setQuestionsAndAnswers(m);
-						return u;
+		String sql="select * from user_security where id=?";
+		
+		List<UserSecurity> u=jdbcTemplate.query(
+			sql,new Object[]{id},
+			new RowMapper<UserSecurity>() {
+				@Override
+				public UserSecurity mapRow(ResultSet rs, int rowNum) 
+						throws SQLException {
+					UserSecurity u=new UserSecurity();
+					u.setId(rs.getInt("id"));
+					u.setPassword(rs.getString("password"));
+					List<QuestionAndAnswer> qnal=
+						new ArrayList<QuestionAndAnswer>();
+					QuestionAndAnswer qna=null;
+					for(int i=1;i<3;i++){
+						qna=new QuestionAndAnswer(
+								rs.getString("question"+(i+1)),
+								rs.getString("answer"+(i+1))
+						);
+						qnal.add(qna);
 					}
-				});
-			if(u.size()!=1) return null;
-			return u.get(0);
+					u.setQuestionsAndAnswers(qnal);
+					return u;
+				}
+			}
+		);
+		if(u.size()!=1) return null;
+		return u.get(0);
 	}
 
 	@Override
-	public boolean add(UserSecurity us) {
-		Map<String,String> m=us.getQuestionsAndAnswers();
-		Set<String> keys=m.keySet();
-		String[] q=new String[3];
-		Iterator<String> it=keys.iterator();
-		for(int i=0;i<3;i++){
-			if(it.hasNext()){
-				q[i]=it.next();
-			}
-		}
-		/*if(keys.size()==3){
-			for(int i=0;i<3;i++){
-				if(it.hasNext()){
-					q[i]=it.next();
-				}
-			}
-		}*/
+	public Integer add(UserSecurity us) {
 		
-		System.out.println(m);
-		System.out.println(keys);
-		System.out.println(q.toString());
-		Object[] params={
-				us.getId(),
-				us.getPassword(),
-				q[0],(q[0]!=null)?(m.get(q[0])):null,
-				q[1],(q[1]!=null)?(m.get(q[1])):null,
-				q[2],(q[2]!=null)?(m.get(q[2])):null
+		
+		List<QuestionAndAnswer> qnal=us.getQuestionsAndAnswers();
+		String[] q=new String[3];
+		String[] a=new String[3];
+		
+		for(int i=0;i<3;i++){
+			q[i]=qnal.get(i).getQuestion();
+			a[i]=qnal.get(i).getAnswer();
+		}
+		
+
+		Object[] queryObjects={
+			us.getId(),
+			us.getPassword(),
+			q[0],a[0],
+			q[1],a[1],
+			q[2],a[2]
 		};
-		jdbcTemplate.update("insert into user_security values(?,?,?,?,?,?,?,?)"
-				,params);
-		return true;
+		
+		jdbcTemplate.update(
+				"insert into user_security values(?,?,?,?,?,?,?,?)"
+				,queryObjects);
+		
+		//同userinfo，id字段对应user的id字段，不自增
+		return us.getId();
 	}
 
 	@Override
 	public boolean update(UserSecurity us) {
-		Map<String,String> m=us.getQuestionsAndAnswers();
-		Set<String> keys=m.keySet();
+	
+		List<QuestionAndAnswer> qnal=us.getQuestionsAndAnswers();
+		
 		String[] q=new String[3];
-		Iterator<String> it=keys.iterator();
+		String[] a=new String[3];
+		
 		for(int i=0;i<3;i++){
-			if(it.hasNext()){
-				q[i]=it.next();
-			}
+			q[i]=qnal.get(i).getQuestion();
+			a[i]=qnal.get(i).getAnswer();
 		}
+		
 
-		
-		
 		Object[] params={
-				us.getPassword(),
-				q[0],(q[0]!=null)?(m.get(q[0])):null,
-				q[1],(q[1]!=null)?(m.get(q[1])):null,
-				q[2],(q[2]!=null)?(m.get(q[2])):null,
-				us.getId()
+			us.getPassword(),
+			q[0],a[0],
+			q[1],a[1],
+			q[2],a[2],
+			us.getId()
 		};
 		
 		String sql="update user_security set "+
@@ -110,8 +118,8 @@ public class UserSecurityDaoImpl implements UserSecurityDao {
 
 	@Override
 	public boolean delete(int id) {
-		// TODO Auto-generated method stub
-		return true;
+		
+		return false;
 	}
 
 }
