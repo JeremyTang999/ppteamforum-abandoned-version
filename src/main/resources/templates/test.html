@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript" src="js/ajaxLib.js"></script>
+</head>
+<body>
+	<form name="fileinfo" method="POST" enctype="multipart/form-data" action="">
+		<input type="file" name="imagefile" accept="image/*" value="选择文件！" title="选择文件。"/>
+		<input type="button" value="上传" onclick="upload()">	
+		<img id="img" width="100" ></img>
+	</form>
+	<script type="text/javascript">
+		function upload(){
+			//var file=document.getElementById("imagefile");
+			var file=new FormData(document.forms.namedItem("fileinfo" ));
+			doUpload("/uploadtest",file,"icallBack");
+		}
+		function icallBack(items,responseStatus,contentType){
+			/* document.getElementById("img").innerHTML=
+					'<img src="'+items+'"></img>';	 */	
+			document.getElementById("img").src=items;
+		}
+	</script>
+</body>
+</html>
