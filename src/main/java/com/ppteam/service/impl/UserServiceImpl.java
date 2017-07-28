@@ -89,9 +89,44 @@ public class UserServiceImpl implements UserService {
 		userInfoDao.update(einfo);
 		return false;
 	}
+
+	@Override
+	public boolean setSecurityInfo(com.ppteam.json.SecurityInfo jinfo) {
+		com.ppteam.entity.UserSecurity einfo=userSecurityDao.get(jinfo.getId());
+		List<QuestionAndAnswer> ol=einfo.getQuestionsAndAnswers();
+		List<QuestionAndAnswer> nl=jinfo.getOriQnA();
+		if(!checkQuestionAndAnswer(ol, nl))
+			return false;
+		
+		if(nl.isEmpty() || nl==null)
+			return true;
+		
+		einfo.setQuestionsAndAnswers(nl);
+		return true;
+	}
 	
 	
-	
+	private boolean checkQuestionAndAnswer(List<QuestionAndAnswer> oriQnA,List<QuestionAndAnswer> newQnA){
+		//检查问题及回答是否匹配
+		boolean[] checked=new boolean[3];
+		QuestionAndAnswer oqna;
+		for(int i=0;i<3;i++){
+			oqna=oriQnA.get(i);
+			checked[i]=false;
+			for(QuestionAndAnswer nqna:newQnA){
+				if(nqna.getQuestion().equals(oqna.getQuestion())){
+					if(nqna.getAnswer().equals(oqna.getAnswer())){
+						checked[i]=true;
+					}
+				}
+			}
+		}
+		for(boolean t:checked){
+			if(!t)
+				return false;
+		}
+		return true;
+	}
 	
 
 }

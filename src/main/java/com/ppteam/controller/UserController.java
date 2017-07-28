@@ -28,6 +28,7 @@ import com.ppteam.json.*;
 import com.ppteam.service.*;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
@@ -43,7 +44,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/username_available",method=RequestMethod.POST)
-	public String username(@RequestParam("username") String username){
+	public String checkUsername(@RequestParam("username") String username){
 		boolean t=userService.usernameAvailable(username);
 		if(t){
 			return "available";
@@ -54,7 +55,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/username_role",method=RequestMethod.GET)
-	public ResponseEntity<?> username(){
+	public ResponseEntity<?> getUsernameAndRole(){
 		
 		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
 		if(auth instanceof AnonymousAuthenticationToken){
@@ -94,5 +95,9 @@ public class UserController {
 		
 	}
 	
+	@RequestMapping(value="/securityinfo",method=RequestMethod.POST)
+	public ResponseEntity<?> securityInfo(SecurityInfo info){
+		
+	}
 	
 }

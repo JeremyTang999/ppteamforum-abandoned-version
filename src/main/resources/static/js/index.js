@@ -28,5 +28,5 @@ function setUsername(items,responseStatus,contentType){
 }
 window.onload=function(){
 		
-	doAjax("username","GET","","setUsername");
+	doAjax("/user/username_role","GET","","setUsername");
 }

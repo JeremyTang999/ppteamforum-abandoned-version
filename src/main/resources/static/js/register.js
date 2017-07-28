@@ -36,7 +36,7 @@ function regProc(){
 	}*/
 
 	alert(JSON.stringify(regInfo));
-	doAjax("/registerinfo","POST",JSON.stringify(regInfo),"regCallBack");
+	doAjax("/user/registerinfo","POST",JSON.stringify(regInfo),"regCallBack");
 	
 	
 }
@@ -61,7 +61,7 @@ function checkName(){
 		unstate.innerHTML="";
 	}
 	var usernameObj={"username":username};
-	doAjax("/username","POST",JSON.stringify(usernameObj),"checkNameCallBack");
+	doAjax("/user/username_available","POST",JSON.stringify(usernameObj),"checkNameCallBack");
 }
 
 function checkNameCallBack(items,responseStatus,contentType){

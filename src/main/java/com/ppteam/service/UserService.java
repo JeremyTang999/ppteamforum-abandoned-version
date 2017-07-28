@@ -8,5 +8,6 @@ public interface UserService {
 	public boolean usernameAvailable(String username);
 	public UserInfo getUserInfo(int id);
 	public boolean setUserInfo(UserInfo ui);
+	public boolean setSecurityInfo(SecurityInfo si);
 
 }
