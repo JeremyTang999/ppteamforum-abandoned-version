@@ -1,17 +1,27 @@
 package com.ppteam.json;
 
-public class UsernameAndRole {
+public class BasicInfo {
 	
+	private Integer id;
 	private String username;
 	private String role;
-	public UsernameAndRole() {
+	public BasicInfo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public UsernameAndRole(String username, String role) {
+	public BasicInfo(Integer id,String username, String role) {
 		super();
+		this.id=id;
 		this.username = username;
 		this.role = role;
+	}
+	
+	public Integer getId(){
+		return id;
+	}
+	
+	public void setId(Integer id){
+		this.id=id;
 	}
 	
 	public String getUsername() {

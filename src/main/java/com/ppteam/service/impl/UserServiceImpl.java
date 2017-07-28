@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public boolean register(RegisterInfo rinfo) {
+		
 		Calendar c=Calendar.getInstance();
 		User u=new User(
 				null,
@@ -90,20 +91,7 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
-	@Override
-	public boolean setSecurityInfo(com.ppteam.json.SecurityInfo jinfo) {
-		com.ppteam.entity.UserSecurity einfo=userSecurityDao.get(jinfo.getId());
-		List<QuestionAndAnswer> ol=einfo.getQuestionsAndAnswers();
-		List<QuestionAndAnswer> nl=jinfo.getOriQnA();
-		if(!checkQuestionAndAnswer(ol, nl))
-			return false;
-		
-		if(nl.isEmpty() || nl==null)
-			return true;
-		
-		einfo.setQuestionsAndAnswers(nl);
-		return true;
-	}
+	
 	
 	
 	private boolean checkQuestionAndAnswer(List<QuestionAndAnswer> oriQnA,List<QuestionAndAnswer> newQnA){
@@ -126,6 +114,18 @@ public class UserServiceImpl implements UserService {
 				return false;
 		}
 		return true;
+	}
+
+	@Override
+	public BasicInfo getBasicInfo(String username) {
+		if(username==null) 
+			return null;
+		User u=userDao.getByUsername(username);
+		BasicInfo bi=new BasicInfo();
+		bi.setId(u.getId());
+		bi.setUsername(u.getUsername());
+		bi.setRole(u.getRole().toString());
+		return bi;
 	}
 	
 

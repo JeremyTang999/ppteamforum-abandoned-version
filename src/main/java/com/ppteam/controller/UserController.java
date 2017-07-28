@@ -3,8 +3,8 @@ package com.ppteam.controller;
 
 
 import java.io.*;
-import java.util.Calendar;
-import java.util.Collection;
+
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,12 +33,14 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+
 	
 	/*@Autowired
 	private UserDao userDao;*/
 
 	@RequestMapping(value="/registerinfo",method=RequestMethod.POST)
 	public ResponseEntity<?> register(@RequestBody RegisterInfo info){
+		System.out.println(info.getUsername());
 		userService.register(info);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -54,50 +56,70 @@ public class UserController {
 		}
 	}
 	
-	@RequestMapping(value="/username_role",method=RequestMethod.GET)
-	public ResponseEntity<?> getUsernameAndRole(){
+	@RequestMapping(value="/basicinfo",method=RequestMethod.GET)
+	public ResponseEntity<BasicInfo> getBasicInfo(){
 		
-		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
-		if(auth instanceof AnonymousAuthenticationToken){
-			//未登录即匿名则返回403
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+		String username=getUsername();
+		
+		if(username==null)
+			return new ResponseEntity<BasicInfo>(HttpStatus.FORBIDDEN);
 		else{
-			Collection<?> c=auth.getAuthorities();
-			//每人仅一种角色，获取c中第一项
-			if(c.size()==1){
-				String role=((GrantedAuthority)(c.iterator().next())).getAuthority();
-				UsernameAndRole ur=new UsernameAndRole(auth.getName(),role);
-				return new ResponseEntity<>(ur,HttpStatus.OK);
-			}
-			else{
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			
+			BasicInfo bi=userService.getBasicInfo(username);
+			return new ResponseEntity<BasicInfo>(bi,HttpStatus.OK);
 		}
+			
 		
 	}
 	
 	@RequestMapping(value="/userinfo",method=RequestMethod.GET)
-	public UserInfo getUserinfo(@RequestParam int id){
+	public UserInfo getUserinfo(@RequestParam("id")int id){
 		return userService.getUserInfo(id);
 	}
 	
 	@RequestMapping(value="/userinfo",method=RequestMethod.POST)
 	public ResponseEntity<?> setUserinfo(UserInfo info){
 		boolean b=userService.setUserInfo(info);
-		if(b){
+		return new ResponseEntity<>(
+				b ? HttpStatus.OK :HttpStatus.FORBIDDEN);
+		/*if(b){
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		else{
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		}*/
 		
 	}
 	
 	@RequestMapping(value="/securityinfo",method=RequestMethod.POST)
 	public ResponseEntity<?> securityInfo(SecurityInfo info){
-		
+		/*boolean t=userService.setSecurityInfo(info);
+		return new ResponseEntity<>(
+				t ? HttpStatus.OK : HttpStatus.FORBIDDEN);
+		*//*if(t){
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else{
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}*/
+		return null;
 	}
 	
+	
+	private String getUsername(){
+		
+		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
+		if(auth instanceof AnonymousAuthenticationToken){
+		
+			return null;
+		}
+		else{
+			return auth.getName();
+		}
+	}
+	
+	private Collection<?> getRole(){
+		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
+		Collection<?> c=auth.getAuthorities();
+		return c;
+	}
 }

@@ -1,32 +1,34 @@
 /**
  * 
  */
-function setUsername(items,responseStatus,contentType){
-	if(responseStatus=="403"){
-		document.getElementById("user").innerHTML=
-			'<a href="/login">登录</a> | '+
-			'<a href="/register">注册</a>';
-		/*var userBar=document.getElementById("user");
-		var loginHref=document.createElement("a");
-		var registerHref=document.createElement("a");
-		loginHref.setAttribute("href","\\login.html");
-		loginHref.innerHTML="登录 ";
-		registerHref.setAttribute("href","\\register.html");
-		registerHref.innerHTML="注册";
-		userBar.appendChild(loginHref);
-		userBar.appendChild(registerHref);*/
-	}
-	else if(responseStatus=="200"){
-		name=JSON.parse(items).username;
-		document.getElementById("user").innerHTML=
-			'welcome, '+'<a href="/user">'+name+'</a>'+
-			' | '+
-			'<a href="/#">车手中心</a>'+
-			' | '+
-			'<a href="/p_logout">退出</a>';
-	}
-}
-window.onload=function(){
-		
-	doAjax("/user/username_role","GET","","setUsername");
-}
+$(document).ready(function(){
+	/*$.get("/user/basicinfo",acallBack);
+	
+	function acallBack(data,status){alert("未登录");
+		if(status=='403'){
+			//$("#user").text(
+			//		"welcome:"+data.username);
+			
+		}
+		else{
+			$("#user").text("未登录");
+			$("#user").value="未登录";
+			
+		}
+	}*/
+	
+	$.ajax({
+		url:"/user/basicinfo",
+		type:"GET",
+		error:function(xhr,status,error){
+			$("#user").append('<a href="/login">登录</a>');
+			$("#user").append('|<a href="/register">注册</a>')
+		},
+		success:function(data,status){
+			$("#user").append('welcome:'+data.username);
+			$("#user").append(' | <a href="/user">个人中心</a>');
+			$("#user").append(' | <a href="/p_logout">退出</a>');
+		}
+	})
+})
+
