@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ppteam.dao.UserDao;
+import com.ppteam.entity.Role;
 import com.ppteam.entity.User;
 import com.ppteam.json.*;
 import com.ppteam.service.*;
@@ -34,6 +35,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private UserDao userDao;
 	
 	/*@Autowired
 	private UserDao userDao;*/
@@ -77,7 +80,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/userinfo",method=RequestMethod.POST)
-	public ResponseEntity<?> setUserinfo(UserInfo info){
+	public ResponseEntity<?> setUserinfo(@RequestBody UserInfo info){
 		boolean b=userService.setUserInfo(info);
 		return new ResponseEntity<>(
 				b ? HttpStatus.OK :HttpStatus.FORBIDDEN);
@@ -104,6 +107,14 @@ public class UserController {
 		return null;
 	}
 	
+	@RequestMapping(value="/updatetest",method=RequestMethod.GET)
+	public void testUpdateUser(@RequestParam int id){
+		User u=new User();
+		u.setId(id);
+		u.setRole(Role.ADMIN);
+		u.setUsername("a");
+		userDao.update(u);
+	}
 	
 	private String getUsername(){
 		

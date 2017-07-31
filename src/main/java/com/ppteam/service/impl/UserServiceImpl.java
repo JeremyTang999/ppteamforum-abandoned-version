@@ -77,18 +77,20 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean setUserInfo(com.ppteam.json.UserInfo jinfo) {
+		System.out.println(jinfo.getId());
 		com.ppteam.entity.UserInfo einfo=userInfoDao.get(jinfo.getId());
-		if((jinfo.getGender()!=null) && !(jinfo.getGender().equals(""))){
+		//if((jinfo.getGender()!=null) && !(jinfo.getGender().equals(""))){
 			einfo.setGender(Gender.fromString(jinfo.getGender()));
-		}
-		if((jinfo.getPhotoPath()!=null)&& !(jinfo.getPhotoPath().equals(""))){
+		//}
+		//if((jinfo.getPhotoPath()!=null)&& !(jinfo.getPhotoPath().equals(""))){
 			einfo.setPhotoPath(jinfo.getPhotoPath());
-		}
-		if((jinfo.getPersonalSignature()!=null)&& !(jinfo.getPersonalSignature().equals(""))){
+		//}
+		//if((jinfo.getPersonalSignature()!=null)&& !(jinfo.getPersonalSignature().equals(""))){
 			einfo.setPersonalSignature(jinfo.getPersonalSignature());
-		}
+		//}
+		System.out.println(einfo==null);
 		userInfoDao.update(einfo);
-		return false;
+		return true;
 	}
 
 	

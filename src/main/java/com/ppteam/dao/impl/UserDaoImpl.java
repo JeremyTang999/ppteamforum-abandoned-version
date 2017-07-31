@@ -7,6 +7,7 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +43,7 @@ public class UserDaoImpl implements UserDao {
 				}
 			});
 		//通常查询得到一个或没有结果
-		if(u.size()!=1) 
+		if(u==null || u.size()!=1) 
 			return null;
 		else 
 			return u.get(0);
@@ -68,7 +69,7 @@ public class UserDaoImpl implements UserDao {
 					}
 				}
 		);
-		if(l.size()!=1)
+		if(l==null || l.size()!=1)
 			return null;
 		else
 			return l.get(0);
@@ -84,7 +85,11 @@ public class UserDaoImpl implements UserDao {
 				u.getRegisterTime(),
 				u.getRole(),
 				u.getId()};
-		jdbcTemplate.update(sql,queryObjects);
+		jdbcTemplate.update(sql,
+				u.getUsername(),
+				u.getRegisterTime(),
+				u.getRole().toString(),
+				u.getId());
 		
 		return true;
 	}
@@ -113,7 +118,7 @@ public class UserDaoImpl implements UserDao {
 					}
 				}
 		);
-		if(u.size()!=1) 
+		if(u==null || u.size()!=1) 
 			return null;
 		return 
 			u.get(0);

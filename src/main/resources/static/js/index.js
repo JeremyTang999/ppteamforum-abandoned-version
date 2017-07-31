@@ -25,8 +25,8 @@ $(document).ready(function(){
 			$("#user").append('|<a href="/register">注册</a>')
 		},
 		success:function(data,status){
-			$("#user").append('welcome:'+data.username);
-			$("#user").append(' | <a href="/user">个人中心</a>');
+			$("#user").append(data.username);
+			$("#user").append(' | <a href="/space">个人中心</a>');
 			$("#user").append(' | <a href="/p_logout">退出</a>');
 		}
 	})

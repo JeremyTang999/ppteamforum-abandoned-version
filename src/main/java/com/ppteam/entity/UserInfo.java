@@ -5,8 +5,8 @@ public class UserInfo {
 
 	private Integer id;
 	private Gender gender;
-	private String photoPath;
-	private String personalSignature;
+	private String photoPath="";
+	private String personalSignature="";
 	
 	public UserInfo() {}
 

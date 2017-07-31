@@ -1,11 +1,13 @@
 package com.ppteam.dao.impl;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -38,7 +40,7 @@ public class UserInfoDaoImpl implements UserInfoDao {
 				}
 		);
 			
-		if(u.size()!=1) 
+		if(u==null || u.size()!=1) 
 			return null;
 		else
 			return u.get(0);
@@ -58,15 +60,18 @@ public class UserInfoDaoImpl implements UserInfoDao {
 
 	@Override
 	public boolean update(UserInfo ui) {
-		String sql="update user_info set "+
-				"gender=?,photo_path=?,personal_signature=? "+
-				"where id=?";
-		Object queryObjects=new Object[]{
+		String sql="update user_info set gender=? , "+
+				"photo_path=? , "+
+				"personal_signature=? "+
+				"where id=? ";
+		
+		
+		jdbcTemplate.update(sql,
 				ui.getGender().toString(),
 				ui.getPhotoPath(),
 				ui.getPersonalSignature(),
-				ui.getId()};
-		jdbcTemplate.update(sql,queryObjects);
+				ui.getId());
+				
 		
 		return true;
 	}

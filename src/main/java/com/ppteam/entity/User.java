@@ -4,7 +4,7 @@ public class User {
 	
 
 	private Integer id;
-	private String username;
+	private String username="";
 	private Long registerTime;
 	private Role role;
 	

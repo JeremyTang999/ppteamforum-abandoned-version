@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		// TODO Auto-generated method stub
 		http.authorizeRequests()
 			.antMatchers("/user/userinfo").authenticated()
-			//.antMatchers("/user/basicinfo").hasAnyAuthority("admin")
+			.antMatchers("/space").authenticated()
 			//.antMatchers("/test.html").authenticated()
 			.anyRequest().permitAll()
 		.and()

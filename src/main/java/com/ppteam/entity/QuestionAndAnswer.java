@@ -1,8 +1,8 @@
 package com.ppteam.entity;
 
 public class QuestionAndAnswer {
-	private String question;
-	private String answer;
+	private String question="";
+	private String answer="";
 	
 	public QuestionAndAnswer(){
 		
