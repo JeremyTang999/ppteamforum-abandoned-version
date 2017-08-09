@@ -5,17 +5,22 @@ import java.util.*;
 import com.ppteam.entity.QuestionAndAnswer;
 public class SecurityInfo {
 	private int id;
-	private List<QuestionAndAnswer> oriQnA= new ArrayList<QuestionAndAnswer>();
-	private List<QuestionAndAnswer> newQna= new ArrayList<QuestionAndAnswer>();
+	private String oriPass;
+	private List<QuestionAndAnswer> oriQA= new ArrayList<QuestionAndAnswer>();
+	private String newPass;
+	private List<QuestionAndAnswer> newQA= new ArrayList<QuestionAndAnswer>();
 	
 	public SecurityInfo(){
 	}
 
-	public SecurityInfo(int id, List<QuestionAndAnswer> oriQnA, List<QuestionAndAnswer> newQna) {
+	public SecurityInfo(int id, String oriPass, List<QuestionAndAnswer> oriQA, String newPass,
+			List<QuestionAndAnswer> newQA) {
 		super();
 		this.id = id;
-		this.oriQnA = oriQnA;
-		this.newQna = newQna;
+		this.oriPass = oriPass;
+		this.oriQA = oriQA;
+		this.newPass = newPass;
+		this.newQA = newQA;
 	}
 
 	public int getId() {
@@ -26,21 +31,39 @@ public class SecurityInfo {
 		this.id = id;
 	}
 
-	public List<QuestionAndAnswer> getOriQnA() {
-		return oriQnA;
+	public String getOriPass() {
+		return oriPass;
 	}
 
-	public void setOriQnA(List<QuestionAndAnswer> oriQnA) {
-		this.oriQnA = oriQnA;
+	public void setOriPass(String oriPass) {
+		this.oriPass = oriPass;
 	}
 
-	public List<QuestionAndAnswer> getNewQna() {
-		return newQna;
+	public List<QuestionAndAnswer> getOriQA() {
+		return oriQA;
 	}
 
-	public void setNewQna(List<QuestionAndAnswer> newQna) {
-		this.newQna = newQna;
+	public void setOriQA(List<QuestionAndAnswer> oriQA) {
+		this.oriQA = oriQA;
 	}
+
+	public String getNewPass() {
+		return newPass;
+	}
+
+	public void setNewPass(String newPass) {
+		this.newPass = newPass;
+	}
+
+	public List<QuestionAndAnswer> getNewQA() {
+		return newQA;
+	}
+
+	public void setNewQna(List<QuestionAndAnswer> newQA) {
+		this.newQA = newQA;
+	}
+
+	
 	
 
 }

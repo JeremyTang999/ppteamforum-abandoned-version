@@ -38,7 +38,7 @@ public class UserSecurityDaoImpl implements UserSecurityDao {
 					List<QuestionAndAnswer> qnal=
 						new ArrayList<QuestionAndAnswer>();
 					QuestionAndAnswer qna=null;
-					for(int i=1;i<3;i++){
+					for(int i=0;i<3;i++){
 						qna=new QuestionAndAnswer(
 								rs.getString("question"+(i+1)),
 								rs.getString("answer"+(i+1))

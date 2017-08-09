@@ -38,8 +38,14 @@ function regProc(){
 	if((($("#password").val())=="")||($("#username").val())==""){
 		alert("用户名或密码不能为空");
 	}
+	else if($("#question1").val()==$("#question2").val()||
+			$("#question1").val()==$("#question3").val()||
+			$("#question2").val()==$("#question3").val()){
+		alert("密保问题不能相同");
+		
+	}
 	else{
-		alert($("input[name='gender']:checked").val());
+//		alert($("input[name='gender']:checked").val());
 		var obj={
 			"username":$("#username").val(),
 			"gender":$("input[name='gender']:checked").val(),

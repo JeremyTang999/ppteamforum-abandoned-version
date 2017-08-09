@@ -95,26 +95,19 @@ public class UserController {
 	
 	@RequestMapping(value="/securityinfo",method=RequestMethod.POST)
 	public ResponseEntity<?> securityInfo(SecurityInfo info){
-		/*boolean t=userService.setSecurityInfo(info);
 		return new ResponseEntity<>(
-				t ? HttpStatus.OK : HttpStatus.FORBIDDEN);
-		*//*if(t){
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
-		else{
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}*/
-		return null;
+				userService.checkAndModifySecurity(info)?
+						HttpStatus.OK:
+						HttpStatus.FORBIDDEN);
+		
 	}
 	
-	@RequestMapping(value="/updatetest",method=RequestMethod.GET)
-	public void testUpdateUser(@RequestParam int id){
-		User u=new User();
-		u.setId(id);
-		u.setRole(Role.ADMIN);
-		u.setUsername("a");
-		userDao.update(u);
+	@RequestMapping(value="/securityinfo",method=RequestMethod.GET)
+	public SecurityInfo getQuestions(@RequestParam("id") int id){
+		return userService.getQuestions(id);
 	}
+	
+	
 	
 	private String getUsername(){
 		

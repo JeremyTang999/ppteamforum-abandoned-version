@@ -6,7 +6,7 @@ var info;
 $(document).ready(function(){
 	
 	$.ajax({
-		url:"user/basicinfo",
+		url:"/user/basicinfo",
 		type:"GET",
 		async:false,
 		success:function(data,status){
@@ -17,7 +17,7 @@ $(document).ready(function(){
 	});
 	
 	$.ajax({
-		url:"user/userinfo",
+		url:"/user/userinfo",
 		type:"GET",
 		data:"id="+id,
 		success:function(data,status){

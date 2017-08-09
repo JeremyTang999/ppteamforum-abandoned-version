@@ -95,28 +95,6 @@ public class UserServiceImpl implements UserService {
 
 	
 	
-	
-	private boolean checkQuestionAndAnswer(List<QuestionAndAnswer> oriQnA,List<QuestionAndAnswer> newQnA){
-		//检查问题及回答是否匹配
-		boolean[] checked=new boolean[3];
-		QuestionAndAnswer oqna;
-		for(int i=0;i<3;i++){
-			oqna=oriQnA.get(i);
-			checked[i]=false;
-			for(QuestionAndAnswer nqna:newQnA){
-				if(nqna.getQuestion().equals(oqna.getQuestion())){
-					if(nqna.getAnswer().equals(oqna.getAnswer())){
-						checked[i]=true;
-					}
-				}
-			}
-		}
-		for(boolean t:checked){
-			if(!t)
-				return false;
-		}
-		return true;
-	}
 
 	@Override
 	public BasicInfo getBasicInfo(String username) {
@@ -129,6 +107,62 @@ public class UserServiceImpl implements UserService {
 		bi.setRole(u.getRole().toString());
 		return bi;
 	}
-	
 
+	@Override
+	public boolean checkAndModifySecurity(SecurityInfo info) {
+		UserSecurity us=userSecurityDao.get(info.getId());
+		if(checkQuestions(us.getQuestionsAndAnswers(), info.getOriQA())){
+			return false;
+		}
+		if(!info.getOriPass().equals(us.getPassword())){
+			return false;
+		}
+		
+		if(info.getNewPass()==null || info.getNewPass().equals("")){
+			
+		}
+		else{
+			us.setPassword(info.getNewPass());
+		}
+		
+		if(info.getNewQA()==null || info.getNewQA().isEmpty()){
+			
+		}
+		else{
+			us.setQuestionsAndAnswers(info.getNewQA());
+		}
+		
+		return true;
+	}
+	
+	
+	
+	@Override
+	public SecurityInfo getQuestions(int id) {
+		UserSecurity us=userSecurityDao.get(id);
+		SecurityInfo si=new SecurityInfo();
+		List<QuestionAndAnswer> l=us.getQuestionsAndAnswers();
+		for(QuestionAndAnswer qa:l){
+			qa.setAnswer(null);
+		}
+		si.setId(id);
+		si.setOriQA(l);
+		return si;
+		
+	}
+
+	private boolean checkQuestions(List<QuestionAndAnswer> oriQA,List<QuestionAndAnswer> newQA){
+		for(QuestionAndAnswer oqa:oriQA){
+			for(QuestionAndAnswer nqa:newQA){
+				if(nqa.getQuestion().equals(oqa.getAnswer())){
+					if(!nqa.getAnswer().equals(oqa.getAnswer())){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	
 }
